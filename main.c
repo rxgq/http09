@@ -1,50 +1,57 @@
 #include <stdio.h>
 #include <stdlib.h> 
+#include <string.h>
 
-int main() {
-    FILE *fptr = fopen("code.txt", "r");
-    char* buff = NULL;
-    long size;
+#define MEMORY_SIZE 65536
 
-    if (fptr == NULL) {
+char* read_source(const char* filename) {
+    FILE *fptr = fopen(filename, "rb");
+
+    if (!fptr) {
         perror("Error opening file.");
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
     fseek(fptr, 0, SEEK_END);
-    size = ftell(fptr);
-    if (size == -1) {
-        perror("Error getting file size");
-        fclose(fptr);
-        return 1;
-    }
-
-    if (fseek(fptr, 0, SEEK_SET) != 0) {
-        perror("Error seeking to start of file");
-        fclose(fptr);
-        return 1;
-    }
+    long size = ftell(fptr);
+    fseek(fptr, 0, SEEK_SET);
 
     // + 1 for null terminator
-    buff = (char *)malloc(size + 1);
+    char *buff = (char *)malloc(size + 1);
     if (buff == NULL) {
         perror("Error allocating memory for asm");
         fclose(fptr);
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
-    if (fread(buff, sizeof(char), size, fptr) != size) {
-        perror("Error reading file");
-        free(buff);
-        fclose(fptr);
-        return 1;
-    }
-
+    fread(buff, sizeof(char), size, fptr);
     buff[size] = '\0';
+
     fclose(fptr);
 
-    printf("File contents:\n%s\n", buff);
+    return buff;
+}
 
-    free(buff);
+int main() {
+    char* cptr = read_source("code.txt");
+    //printf("%s", cptr);
+
+    char* tokens[64]; // experimental
+    const char* delimiter = "\n";
+    int token_count = 0;
+
+    char* token = strtok(cptr, delimiter); 
+    while (token_count < 100 && token != NULL) {
+        tokens[token_count++] = strdup(token);
+        token = strtok(NULL, delimiter);
+    }
+
+    for (int i = 0; i < token_count; i++) {
+        printf("%d ", i);
+        printf("%s\n", tokens[i]);
+    }
+
+    free(cptr);
+
     return 0;
 }
