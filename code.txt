@@ -1,5 +1,1 @@
 ADD eax, 1
-OUT eax
-ADD eax, 1
-OUT eax
-SUB ecx, 10
