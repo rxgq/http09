@@ -2,9 +2,6 @@
 #include <stdlib.h> 
 #include <string.h>
 
-#define MAX_TOKENS 100
-#define MAX_PARAMS 10
-
 struct Token {
     char Value[4];
     char** Params;
@@ -75,43 +72,37 @@ char** tokenize_params(const char* param_str) {
     return params;
 }
 
-struct Token* tokenize(char* cptr) {
-    struct Token* tokens = (struct Token*)malloc(100 * sizeof(struct Token));
-    if (tokens == NULL) {
-        perror("Error allocating memory for tokens");
-        exit(EXIT_FAILURE);
-    }
+char* substr(char* str, int start, int end) {
+    char* sptr = (char*)malloc((end - start + 1) * sizeof(char));
+    if (!sptr) return NULL;
 
+    strncpy(sptr, str + start, end - start);
+    sptr[end - start] = '\0';
+
+    return sptr;
+}
+
+char** tokenize(char* cptr) {
+    char** tokens = (char **)malloc(64 * sizeof(char *));
     const char* delimiter = "\n";
     int token_count = 0;
 
     char* token = strtok(cptr, delimiter); 
     while (token_count < 100 && token != NULL) {
+        char* space_idx = strchr(token, ' ');
+        int index = (int)(space_idx - token) + 1;
 
-        char* space = strchr(token, ' ');
-        if (space != NULL) {
-            int space_idx = (int)(space - token) + 1;
-            char* param_str = skip_char(token, space_idx);
+        int length = strlen(token) - index;
+        char* param_str = substr(token, index, index + length);
 
-            char** params = tokenize_params(param_str);
-            strncpy(tokens[token_count].Value, token, sizeof(tokens[token_count].Value) - 1);
-            tokens[token_count].Value[sizeof(tokens[token_count].Value) - 1] = '\0';
 
-            tokens[token_count].Params = params;
-        }
-
+        tokens[token_count++] = strdup(token);
         token = strtok(NULL, delimiter);
-        token_count++;
     }
 
     for (int i = 0; i < token_count; i++) {
-        printf("Token %d: Value=%s, Params=[", i, tokens[i].Value);
-        if (tokens[i].Params != NULL) {
-            for (int j = 0; tokens[i].Params[j] != NULL; j++) {
-                printf("%s%s", tokens[i].Params[j], (tokens[i].Params[j + 1] != NULL) ? ", " : "");
-            }
-        }
-        printf("]\n");
+        // printf("%d ", i);
+        // printf("%s\n", tokens[i]);
     }
 
     return tokens;
@@ -119,7 +110,7 @@ struct Token* tokenize(char* cptr) {
 
 int main() {
     char* cptr = read_source("code.txt");
-    struct Token* tokens = tokenize(cptr);
+    char** tokens = tokenize(cptr);
 
 
     return 0;

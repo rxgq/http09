@@ -1,1 +1,1 @@
-ADD eax, 1
+LOAD eax, 12
