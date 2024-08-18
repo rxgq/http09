@@ -1,17 +1,8 @@
 {
     "files.associations": {
-        "*.rasi": "css",
-        "*.bbmodel": "json",
-        "*.sublime-snippet": "xml",
-        "*.hbs": "html",
-        "*.ejs": "html",
-        "*.emu": "html",
-        "lesskey": "lesskey",
-        "*.Xresources": "xdefaults",
-        "i3/config": "i3",
-        "i3/*.conf": "i3",
-        "polybar/config": "ini",
-        "polybar/*.conf": "ini",
-        "cstdint": "c"
-    }
+        "stdio.h": "c",
+        "ws2tcpip.h": "c",
+        "server.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
