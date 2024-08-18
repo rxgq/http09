@@ -11,6 +11,11 @@ int main() {
         return 1;
     }
 
+    if (start_server(server) != 0) {
+        free(server);
+        return 1;
+    }
+    
     free(server);
     return 0;
 }

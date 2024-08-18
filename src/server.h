@@ -9,5 +9,6 @@ typedef struct {
 } HttpServer;
 
 int init_server(HttpServer *server);
+int start_server(HttpServer *server);
 
 #endif
