@@ -1,21 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "server.h"
+#include <WinSock2.h>
+
+#pragma comment(lib, "ws2_32.lib")
+
+#define PORT 8080
+#define BUFF 1024
 
 int main() {
-    HttpServer *server = (HttpServer *)malloc(sizeof(HttpServer));
-    server->port = 8080;
+    WSADATA wsaData;
+    SOCKET server, client;
 
-    if (init_server(server) != 0) {
-        free(server);
+    if (WSAStartup(MAKEWORD(2,2), &wsaData) != 0) {
+        printf("wsa failed to initialise");
         return 1;
     }
 
-    if (start_server(server) != 0) {
-        free(server);
-        return 1;
-    }
-    
-    free(server);
+    // AF_INET specifies IPv4
+    // SOCK_STREAM is is TCP for IPv4
+    // IPROTO_TCP specifies TCP
+    server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)
+
     return 0;
 }

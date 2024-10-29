@@ -4,5 +4,6 @@
         "ws2tcpip.h": "c",
         "server.h": "c"
     },
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "workbench.colorTheme": "Tokyo Night Storm"
 }
